@@ -1,4 +1,4 @@
-from typing import no_type_check_decorator
+from datetime import datetime
 import flask
 from flask import jsonify,request
 from flask import make_response
@@ -38,17 +38,21 @@ df = df.toPandas()
 # for col df_col_list:
 #     print(df[col])
 # Republic replace to year
-# def repubic_transfer(s):
-#     if len(s)==7:
-#         return s.replace(s[0:3],str(int(s[0:3]) + 1911))        
-#     else:
-#         return s.replace(s[0:2],str(int(s[0:2]) + 1911))
-# df["交易年月日"] = df["交易年月日"].astype(str).apply(repubic_transfer)
-# # # ignore Irregular to regular
-# df["交易年月日"] = df["交易年月日"].astype(str).apply(lambda s:s==None if len(s) == 9 else s)
-# print(df["交易年月日"].unique())
-# df["交易年月日"] = pd.to_datetime(df["交易年月日"],format="%Y%m%d")
-# df["交易年月日"] = df["交易年月日"].apply(lambda t:t.strftime("%Y-%m-%d") if len(t)==8 else t)
+def repubic_transfer(s):
+    if len(s)==7:
+        return s.replace(s[0:3],str(int(s[0:3]) + 1911))        
+    else:
+        return s.replace(s[0:2],str(int(s[0:2]) + 1911))
+# timestamp replace to string
+def timestamp_replace_to_string(t):
+    try:
+        t.strftime("%Y-%m-%d")
+        return t.strftime("%Y-%m-%d")
+    except:
+        return t 
+df["交易年月日"] = df["交易年月日"].astype(str).apply(repubic_transfer)
+df["交易年月日"] = df["交易年月日"].apply(lambda t:datetime.strptime(t,"%Y%m%d") if len(t)==8 else t)
+df["交易年月日"] = df["交易年月日"].apply(timestamp_replace_to_string)
 # 鄉鎮市區options
 taipe_area_list = a_lvr_land_a["鄉鎮市區"].unique()
 taichung_area_list = b_lvr_land_a["鄉鎮市區"].unique()
