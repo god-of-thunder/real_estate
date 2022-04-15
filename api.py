@@ -50,8 +50,27 @@ def timestamp_replace_to_string(t):
         return t.strftime("%Y-%m-%d")
     except:
         return t 
+# debug Republic replace to year
+def debug_Republic_replace_to_year(b):
+    debug_dict ={
+            "201902019":"20190108",
+            "201812018":"20181107",
+            "201320135":"20131025",
+            "201320138":"20131028",
+            "201512015":"20151104",
+        }
+    if len(b)==9:
+        if b in debug_dict.keys():
+            return debug_dict[b]
+    else:
+        return b 
+
 df["交易年月日"] = df["交易年月日"].astype(str).apply(repubic_transfer)
-df["交易年月日"] = df["交易年月日"].apply(lambda t:datetime.strptime(t,"%Y%m%d") if len(t)==8 else t)
+df["交易年月日"] = df["交易年月日"].astype(str).apply(debug_Republic_replace_to_year)
+df["交易年月日"] = df["交易年月日"].fillna(value="20170106") 
+df["交易年月日"] = pd.to_datetime(df["交易年月日"],format="%Y%m%d")
+# sort 交易年月日 desc
+df = df.sort_values(by="交易年月日",ascending=False)
 df["交易年月日"] = df["交易年月日"].apply(timestamp_replace_to_string)
 # 鄉鎮市區options
 taipe_area_list = a_lvr_land_a["鄉鎮市區"].unique()
