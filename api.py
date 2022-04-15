@@ -200,40 +200,40 @@ def area_name():
             json_list = []
             for record in records:
                 json_list.append(record)
-            json = {"city":"臺北市","data":json_list} 
-            return _custom_response(json)
+            result_json = {"city":"臺北市","data":json_list} 
+            return _custom_response(result_json)
         elif area_name in taichung_area_list:
             a = df[df["鄉鎮市區"]==area_name]
             records = a.to_dict("records")
             json_list = []
             for record in records:
                 json_list.append(record)
-            json = {"city":"臺中市","data":json_list} 
-            return _custom_response(json)
+            result_json = {"city":"臺中市","data":json_list} 
+            return _custom_response(result_json)
         elif area_name in kaohsiung_area_list:
             a = df[df["鄉鎮市區"]==area_name]
             records = a.to_dict("records")
             json_list = []
             for record in records:
                 json_list.append(record)
-            json = {"city":"高雄市","data":json_list} 
-            return _custom_response(json)
+            result_json = {"city":"高雄市","data":json_list} 
+            return _custom_response(result_json)
         elif area_name in new_taipei_area_list:
             a = df[df["鄉鎮市區"]==area_name]
             records = a.to_dict("records")
             json_list = []
             for record in records:
                 json_list.append(record)
-            json = {"city":"新北市","data":json_list} 
-            return _custom_response(json)
+            result_json = {"city":"新北市","data":json_list} 
+            return _custom_response(result_json)
         elif area_name in taoyuan_area_list:
             a = df[df["鄉鎮市區"]==area_name]
             records = a.to_dict("records")
             json_list = []
             for record in records:
                 json_list.append(record)
-            json = {"city":"桃園市","data":json_list}    
-            return _custom_response(json)            
+            result_json = {"city":"桃園市","data":json_list}    
+            return _custom_response(result_json)            
     else:
         return "Error: No area_name provided. Please specify a area_name."
 
@@ -265,8 +265,8 @@ def total_floor():
                 elif record["鄉鎮市區"] in taoyuan_area_list and record["土地位置建物門牌"][0:3]=="桃園市":
                     h_record_list.append(record)
                     h_json = {"city":"桃園市","data":h_record_list}
-            json = {"all_cities_data":[a_json,b_json,e_json,f_json,h_json]}         
-            return _custom_response(json)
+            result_json = {"all_cities_data":[a_json,b_json,e_json,f_json,h_json]}         
+            return _custom_response(result_json)
     else:
         return "Error: No total_floor provided. Please specify a total_floor."        
 
@@ -298,8 +298,8 @@ def building_type():
                 elif record["鄉鎮市區"] in taoyuan_area_list and record["土地位置建物門牌"][0:3]=="桃園市":
                     h_record_list.append(record)
                     h_json = {"city":"桃園市","data":h_record_list}
-            json = {"all_cities_data":[a_json,b_json,e_json,f_json,h_json]}         
-            return _custom_response(json)
+            result_json = {"all_cities_data":[a_json,b_json,e_json,f_json,h_json]}         
+            return _custom_response(result_json)
         elif building_type=="住宅大樓":
             a = df[df["建物型態"].apply(lambda y:y[0:4]==building_type)]
             records = a.to_dict("records")
@@ -324,8 +324,8 @@ def building_type():
                 elif record["鄉鎮市區"] in taoyuan_area_list and record["土地位置建物門牌"][0:3]=="桃園市":
                     h_record_list.append({"date":record["交易年月日"],"events":[{"district":record["鄉鎮市區"],"building_state":record["建物型態"]}]})
                     h_json = {"city":"桃園市","time_slots":h_record_list}
-            json = {"all_cities_data":[a_json,b_json,e_json,f_json,h_json]}         
-            return _custom_response(json)       
+            result_json = {"all_cities_data":[a_json,b_json,e_json,f_json,h_json]}         
+            return _custom_response(result_json)       
     else:
         return "Error: No building_type provided. Please specify a building_type."
 
@@ -357,8 +357,8 @@ def main_use():
                 elif record["鄉鎮市區"] in taoyuan_area_list and record["土地位置建物門牌"][0:3]=="桃園市":
                     h_record_list.append({"date":record["交易年月日"],"events":[{"district":record["鄉鎮市區"],"building_state":record["建物型態"]}]})
                     h_json = {"city":"桃園市","time_slots":h_record_list}
-            json = {"all_cities_data":[a_json,b_json,e_json,f_json,h_json]}         
-            return _custom_response(json)
+            result_json = {"all_cities_data":[a_json,b_json,e_json,f_json,h_json]}         
+            return _custom_response(result_json)
     else:
         return "Error: No main_use provided. Please specify a main_use."        
 @app.route('/total_floor_spark', methods=['GET'])
@@ -390,8 +390,8 @@ def total_floor_spark():
                 elif record["鄉鎮市區"] in taoyuan_area_list and record["土地位置建物門牌"][0:3]=="桃園市":
                     h_record_list.append({"date":record["交易年月日"],"events":[{"district":record["鄉鎮市區"],"building_state":record["建物型態"]}]})
                     h_json = {"city":"桃園市","data":h_record_list}
-            json = {"all_cities_data":[a_json,b_json,e_json,f_json,h_json]}         
-            return _custom_response(json)
+            result_json = {"all_cities_data":[a_json,b_json,e_json,f_json,h_json]}         
+            return _custom_response(result_json)
     else:
         return "Error: No total_floor_spark provided. Please specify a total_floor_spark."
 
@@ -421,8 +421,8 @@ def spark_result():
         elif record["鄉鎮市區"] in taoyuan_area_list and record["土地位置建物門牌"][0:3]=="桃園市":
             h_record_list.append({"date":record["交易年月日"],"events":[{"district":record["鄉鎮市區"],"building_state":record["建物型態"]}]})
             h_json = {"city":"桃園市","time_slots":h_record_list}
-    json = {"all_cities_data":[a_json,b_json,e_json,f_json,h_json]}         
-    return _custom_response(json)
+    result_json = {"all_cities_data":[a_json,b_json,e_json,f_json,h_json]}         
+    return _custom_response(result_json)
 @app.route('/result_to_json/', methods=['GET'])
 def result_to_json():
     df["總樓層數"] = df["總樓層數"].apply(chinese_number_transfer_to_int)
