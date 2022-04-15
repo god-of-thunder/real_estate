@@ -1,3 +1,5 @@
+import random
+import json
 from datetime import datetime
 import flask
 from flask import jsonify,request
@@ -420,5 +422,43 @@ def spark_result():
             h_record_list.append({"date":record["交易年月日"],"events":[{"district":record["鄉鎮市區"],"building_state":record["建物型態"]}]})
             h_json = {"city":"桃園市","time_slots":h_record_list}
     json = {"all_cities_data":[a_json,b_json,e_json,f_json,h_json]}         
-    return _custom_response(json)           
+    return _custom_response(json)
+@app.route('/result_to_json/', methods=['GET'])
+def result_to_json():
+    df["總樓層數"] = df["總樓層數"].apply(chinese_number_transfer_to_int)
+    a = df[(df["主要用途"]=="住家用")&(df["建物型態"].apply(lambda y:y[0:4]=="住宅大樓"))&(df["總樓層數"] >=13)]
+    records = a.to_dict("records")
+    a_record_list=[]
+    b_record_list=[]
+    e_record_list=[]
+    f_record_list=[]
+    h_record_list=[]
+    for record in records:
+        if record["鄉鎮市區"] in taipe_area_list and record["土地位置建物門牌"][0:3]=="臺北市":
+            a_record_list.append({"date":record["交易年月日"],"events":[{"district":record["鄉鎮市區"],"building_state":record["建物型態"]}]})
+            a_json = {"city":"臺北市","time_slots":a_record_list} 
+        elif record["鄉鎮市區"] in taichung_area_list and record["土地位置建物門牌"][0:3]=="臺中市":
+            b_record_list.append({"date":record["交易年月日"],"events":[{"district":record["鄉鎮市區"],"building_state":record["建物型態"]}]})
+            b_json = {"city":"臺中市","time_slots":b_record_list}
+        elif record["鄉鎮市區"] in kaohsiung_area_list and record["土地位置建物門牌"][0:3]=="高雄市":
+            e_record_list.append({"date":record["交易年月日"],"events":[{"district":record["鄉鎮市區"],"building_state":record["建物型態"]}]})
+            e_json = {"city":"高雄市","time_slots":e_record_list}
+        elif record["鄉鎮市區"] in new_taipei_area_list and record["土地位置建物門牌"][0:3]=="新北市":
+            f_record_list.append({"date":record["交易年月日"],"events":[{"district":record["鄉鎮市區"],"building_state":record["建物型態"]}]})
+            f_json = {"city":"新北市","time_slots":f_record_list}
+        elif record["鄉鎮市區"] in taoyuan_area_list and record["土地位置建物門牌"][0:3]=="桃園市":
+            h_record_list.append({"date":record["交易年月日"],"events":[{"district":record["鄉鎮市區"],"building_state":record["建物型態"]}]})
+            h_json = {"city":"桃園市","time_slots":h_record_list}
+    # random to get two cities json files        
+    all_list = [a_json,b_json,e_json,f_json,h_json]        
+    rand_list = []
+    for i in range(1,3):
+        r = random.choice(all_list)        
+        jsonFile = open("result-part{}.json".format(i), "w")
+        jsonFile.write(json.dumps(r,ensure_ascii=False))
+        jsonFile.close()
+        rand_list.append(r)
+
+    result_json = {"all_cities_data":rand_list}         
+    return _custom_response(result_json)               
 app.run(use_reloader=False)
