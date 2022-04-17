@@ -42,7 +42,20 @@ df = df.toPandas()
 # Republic replace to year
 def repubic_transfer(s):
     if len(s)==7:
-        return s.replace(s[0:3],str(int(s[0:3]) + 1911))        
+        if s[0:3] in s[3:8]:
+            
+            debug_dict ={
+            "1041104":"20151104",
+            "1021025":"20131025",
+            "1060106":"20170106",
+            "1021028":"20131028",
+            "1071107":"20181107",
+            "1080108":"20190108"
+            }
+            if s in debug_dict.keys():
+                return debug_dict[s]
+        else:
+            return s.replace(s[0:3],str(int(s[0:3]) + 1911))               
     else:
         return s.replace(s[0:2],str(int(s[0:2]) + 1911))
 # timestamp replace to string
@@ -52,24 +65,24 @@ def timestamp_replace_to_string(t):
         return t.strftime("%Y-%m-%d")
     except:
         return t 
-# debug Republic replace to year
-def debug_Republic_replace_to_year(b):
-    debug_dict ={
-            "201902019":"20190108",
-            "201812018":"20181107",
-            "201320135":"20131025",
-            "201320138":"20131028",
-            "201512015":"20151104",
-        }
-    if len(b)==9:
-        if b in debug_dict.keys():
-            return debug_dict[b]
-    else:
-        return b 
+# # debug Republic replace to year
+# def debug_Republic_replace_to_year(b):
+#     debug_dict ={
+#             "201902019":"20190108",
+#             "201812018":"20181107",
+#             "201320135":"20131025",
+#             "201320138":"20131028",
+#             "201512015":"20151104",
+#         }
+#     if len(b)==9:
+#         if b in debug_dict.keys():
+#             return debug_dict[b]
+#     else:
+#         return b 
 
 df["交易年月日"] = df["交易年月日"].astype(str).apply(repubic_transfer)
-df["交易年月日"] = df["交易年月日"].astype(str).apply(debug_Republic_replace_to_year)
-df["交易年月日"] = df["交易年月日"].fillna(value="20170106") 
+# df["交易年月日"] = df["交易年月日"].astype(str).apply(debug_Republic_replace_to_year)
+# df["交易年月日"] = df["交易年月日"].fillna(value="20170106") 
 df["交易年月日"] = pd.to_datetime(df["交易年月日"],format="%Y%m%d")
 # sort 交易年月日 desc
 df = df.sort_values(by="交易年月日",ascending=False)
