@@ -328,15 +328,15 @@ def building_type():
 @app.route('/spark/', methods=['GET'])
 def spark_result():        
     for record in records:
-        if record["鄉鎮市區"] in taipe_area_list and record["土地位置建物門牌"][0:3]=="臺北市":
+        if record["鄉鎮市區"] in taipe_area_list :
             a_record_list.append({"date":record["交易年月日"],"events":[{"district":record["鄉鎮市區"],"building_state":record["建物型態"]}]}) 
-        elif record["鄉鎮市區"] in taichung_area_list and record["土地位置建物門牌"][0:3]=="臺中市":
+        elif record["鄉鎮市區"] in taichung_area_list :
             b_record_list.append({"date":record["交易年月日"],"events":[{"district":record["鄉鎮市區"],"building_state":record["建物型態"]}]})
-        elif record["鄉鎮市區"] in kaohsiung_area_list and record["土地位置建物門牌"][0:3]=="高雄市":
+        elif record["鄉鎮市區"] in kaohsiung_area_list :
             e_record_list.append({"date":record["交易年月日"],"events":[{"district":record["鄉鎮市區"],"building_state":record["建物型態"]}]})
-        elif record["鄉鎮市區"] in new_taipei_area_list and record["土地位置建物門牌"][0:3]=="新北市":
+        elif record["鄉鎮市區"] in new_taipei_area_list :
             f_record_list.append({"date":record["交易年月日"],"events":[{"district":record["鄉鎮市區"],"building_state":record["建物型態"]}]})
-        elif record["鄉鎮市區"] in taoyuan_area_list and record["土地位置建物門牌"][0:3]=="桃園市":
+        elif record["鄉鎮市區"] in taoyuan_area_list :
             h_record_list.append({"date":record["交易年月日"],"events":[{"district":record["鄉鎮市區"],"building_state":record["建物型態"]}]})
     result_json = {"all_cities_data":[a_json,b_json,e_json,f_json,h_json]}
     return _custom_response(result_json)
@@ -354,14 +354,21 @@ def result_to_json():
         elif record["鄉鎮市區"] in taoyuan_area_list and record["土地位置建物門牌"][0:3]=="桃園市":
             h_record_list.append({"date":record["交易年月日"],"events":[{"district":record["鄉鎮市區"],"building_state":record["建物型態"]}]})
     # random to get two cities json files        
-    all_list = [a_json,b_json,e_json,f_json,h_json]        
+    all_list = ["a_json","b_json","e_json","f_json","h_json"]       
     rand_list = []
+    result_dict = {
+        "a_json":a_json,
+        "b_json":b_json,
+        "e_json":e_json,
+        "f_json":f_json,
+        "h_json":h_json 
+    }   
     for i in range(1,3):
         r = random.choice(all_list)        
         jsonFile = open("result-part{}.json".format(i), "w")
-        jsonFile.write(json.dumps(r,ensure_ascii=False))
+        jsonFile.write(json.dumps(result_dict[r],ensure_ascii=False))
         jsonFile.close()
-        rand_list.append(r)
+        rand_list.append(result_dict[r])
 
     result_json = {"all_cities_data":rand_list}
     return _custom_response(result_json)
