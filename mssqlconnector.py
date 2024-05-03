@@ -48,7 +48,7 @@ class SQL(MssqlConnector):
         result = 0
         return result
     
-    def insert_df(self, df: pd.DataFrame) -> int:
+    def insert_df(self, sql: str, df: pd.DataFrame) -> int:
         df = df.to_records(index=False).tolist()
         self._cursor.executemany(sql, df)
         self._connector.commit()
